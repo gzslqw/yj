@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>易经六爻占卜 - 完整版</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>䷀</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-yin-yang"></i> 易经六爻占卜</h1>
+            <p class="subtitle">传统智慧 · 现代演绎 · 完整六十四卦数据库</p>
+        </header>
+        
+        <div class="main-content">
+            <!-- 左侧面板 -->
+            <div class="panel left-panel">
+                <div class="panel-header">
+                    <i class="fas fa-coins"></i>
+                    <span>摇卦模拟</span>
+                </div>
+                <div class="panel-body">
+                    <div class="rules">
+                        <div class="rule-item">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>六爻占卜原理</strong>
+                                <p>通过模拟投掷三枚铜钱六次，根据阴阳组合生成六爻，对应《易经》六十四卦。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="instruction">
+                        <h3><i class="fas fa-mouse-pointer"></i> 点击铜钱手动摇卦，或使用下方按钮</h3>
+                        <p>三枚铜钱：有字面为"阴"，有花面为"阳"</p>
+                    </div>
+                    
+                    <!-- 铜钱容器 -->
+                    <div class="coins-container" id="coinsContainer">
+                        <div class="coin" id="coin1" onclick="manualTossCoin(0)">
+                            <div class="coin-text">乾<br>隆<br>通<br>宝</div>
+                        </div>
+                        <div class="coin" id="coin2" onclick="manualTossCoin(1)">
+                            <div class="coin-text">乾<br>隆<br>通<br>宝</div>
+                        </div>
+                        <div class="coin" id="coin3" onclick="manualTossCoin(2)">
+                            <div class="coin-text">乾<br>隆<br>通<br>宝</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 进度条 -->
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    
+                    <!-- 状态显示 -->
+                    <div class="status" id="status">准备开始摇卦 (0/6)</div>
+                    
+                    <!-- 控制按钮 -->
+                    <div class="controls">
+                        <button class="btn btn-primary" id="tossButton" onclick="tossCoins()">
+                            <i class="fas fa-random"></i> 摇一次卦
+                        </button>
+                        <button class="btn btn-success" id="autoButton" onclick="autoTossAll()">
+                            <i class="fas fa-bolt"></i> 一键摇六次
+                        </button>
+                        <button class="btn btn-secondary" id="resetButton" onclick="resetAll()">
+                            <i class="fas fa-redo"></i> 重新开始
+                        </button>
+                    </div>
+                    
+                    <!-- 爻序列显示 -->
+                    <div class="yao-sequence-container">
+                        <h3><i class="fas fa-bars"></i> 爻序列（从下往上）</h3>
+                        <div class="yao-sequence" id="yaoSequence">
+                            <div class="empty-state">
+                                <i class="fas fa-arrow-up"></i>
+                                <p>摇卦完成后，爻序列将显示在这里</p>
+                                <p>初爻在最下方，上爻在最上方</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧面板 -->
+            <div class="panel right-panel">
+                <div class="panel-header">
+                    <i class="fas fa-book-open"></i>
+                    <span>卦象解读</span>
+                </div>
+                <div class="panel-body">
+                    <!-- 结果展示区域 -->
+                    <div class="result-display" id="resultDisplay">
+                        <div class="empty-state">
+                            <i class="fas fa-yin-yang"></i>
+                            <h3>等待摇卦结果</h3>
+                            <p>摇卦完成后，卦象解读将显示在这里</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 变爻信息区域 -->
+                    <div class="change-yao-container" id="changeYaoContainer" style="display: none;">
+                        <h4><i class="fas fa-exchange-alt"></i> 变爻信息</h4>
+                        <div id="changeYaoContent"></div>
+                    </div>
+                    
+                    <!-- 历史记录区域 -->
+                    <div class="history-section">
+                        <h4><i class="fas fa-history"></i> 历史记录</h4>
+                        <div class="history-container" id="historyContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-history"></i>
+                                <p>暂无历史记录</p>
+                                <p>摇卦结果将自动保存</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 操作按钮 -->
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="clearHistory()">
+                                <i class="fas fa-trash"></i> 清空历史
+                            </button>
+                            <button class="btn btn-primary" onclick="exportResults()">
+                                <i class="fas fa-download"></i> 导出结果
+                            </button>
+                            <button class="btn btn-info" onclick="showHelp()">
+                                <i class="fas fa-question-circle"></i> 使用帮助
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <footer>
+            <p>《易经》六爻占卜软件 v2.0 · 基于传统周易算法 · 仅供学习和参考</p>
+            <p>易经智慧重在修身养性、审时度势，卦象仅供参考，命运掌握在自己手中</p>
+            <p>© 2024 易经六爻占卜 · 本工具完全在浏览器中运行，不保存任何数据到服务器</p>
+        </footer>
+    </div>
+    
+    <!-- 帮助模态框 -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> 使用帮助</h2>
+                <button class="close-modal" onclick="closeHelp()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>如何使用本占卜工具</h3>
+                <div class="help-item">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <div>
+                        <strong>摇卦方法</strong>
+                        <p>1. 点击"摇一次卦"按钮，每次模拟投掷三枚铜钱，重复6次完成一卦</p>
+                        <p>2. 或点击"一键摇六次"按钮，快速完成整个摇卦过程</p>
+                        <p>3. 也可以直接点击铜钱手动设置阴阳面</p>
+                    </div>
+                </div>
+                
+                <div class="help-item">
+                    <i class="fas fa-book"></i>
+                    <div>
+                        <strong>卦象解读</strong>
+                        <p>1. 本卦：当前状况，反映事情的基本态势</p>
+                        <p>2. 变卦：未来发展趋势，由变爻变化而来</p>
+                        <p>3. 变爻：老阳(—○)和老阴(- -○)为变爻，代表变化的因素</p>
+                    </div>
+                </div>
+                
+                <div class="help-item">
+                    <i class="fas fa-database"></i>
+                    <div>
+                        <strong>卦象数据库</strong>
+                        <p>本工具包含完整的《周易》六十四卦数据库，确保每次摇卦都能获得准确的卦象解读。</p>
+                    </div>
+                </div>
+                
+                <div class="help-item">
+                    <i class="fas fa-save"></i>
+                    <div>
+                        <strong>保存与导出</strong>
+                        <p>1. 摇卦结果自动保存到浏览器的本地存储</p>
+                        <p>2. 点击"导出结果"可将当前卦象保存为文本文件</p>
+                        <p>3. 历史记录最多保存50条，可随时查看</p>
+                    </div>
+                </div>
+                
+                <div class="tips">
+                    <h4><i class="fas fa-lightbulb"></i> 易经占卜的哲学意义</h4>
+                    <p>《易经》强调"卦不妄成，爻不虚发"，占卜的真正价值在于通过卦象启发思考，而非预测未来。最好的占卜是修养德行、明智决策。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 加载JavaScript文件 -->
+    <script src="script.js"></script>
+    <script src="gua_database.js"></script>
+    <script>
+        // 初始化应用程序
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+        });
+    </script>
+</body>
+</html>
